@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import numpy as np
 
 import pandas as pd
 
@@ -37,6 +36,6 @@ round_id = df_grants[df_grants['Round name'] == ROUND_NAME]['Round ID'].values[0
 array_unique_address = df_votes[df_votes['roundId'] == round_id]['voter'].unique()
 
 # extract transactions to the path
-flipside_api.extract_transactions_net(PATH_TO_EXPORT, array_unique_address[:10], CHAIN)
+flipside_api.extract_transactions_net(PATH_TO_EXPORT, array_unique_address, CHAIN)
 
 print("End mining transactions")
