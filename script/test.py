@@ -45,4 +45,3 @@ data_loader = LoadData.LoadData(PATH_TO_EXPORT)
 # Load the transactions of the addresses in a dataframe
 df_tx = data_loader.create_df_tx('ethereum')
 
-a = 0
