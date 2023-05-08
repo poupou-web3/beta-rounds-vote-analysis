@@ -27,6 +27,3 @@ array_unique_address = np.char.lower(df_votes.voter.unique().astype(str))
 flipside_api.extract_transactions_net(PATH_TO_EXPORT, array_unique_address, 'ethereum')
 
 print("End mining transactions")
-
-from sbutils import LoadData
-data_loader = LoadData.LoadData(PATH_TO_EXPORT)

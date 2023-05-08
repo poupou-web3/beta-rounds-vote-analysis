@@ -16,7 +16,7 @@ DATA_DIR = os.path.join(current_dir.parent.parent, 'data-regen-rangers')
 
 # Initialize Flipside API
 api_key = os.environ['FLIPSIDE_API_KEY']
-flipside_api = FlipsideApi(api_key, max_address=400)
+flipside_api = FlipsideApi(api_key, max_address=100)
 
 # 0x12BB5bBbFE596dbc489d209299B8302c3300fa40,Web3 Open Source Software Round,58
 # Load data
