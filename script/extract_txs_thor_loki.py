@@ -34,15 +34,6 @@ df_sybils_gr15_oss.dropna(subset=['ID'], inplace=True)
 df_sybils_gr15_eth.dropna(subset=['ID'], inplace=True)
 df_sybils_gr15_climate.dropna(subset=['ID'], inplace=True)
 
-addresses = df_loki['Wallet Address'].tolist()
-addresses += df_sybils_gr15_oss['ID'].tolist()
-addresses += df_sybils_gr15_eth['ID'].tolist()
-addresses += df_sybils_gr15_climate['ID'].tolist()
-print(f'addresses {len(addresses)}')
-unique_addresses = np.unique(np.array(addresses))
-print(f'unique_addresses {len(unique_addresses)}')
-print(f'{len(addresses) - len(unique_addresses)} duplicates')
-
 loki_unique_address = df_loki['Wallet Address'].unique()
 
 other_add = df_sybils_gr15_oss['Source Address'].tolist()
@@ -50,10 +41,14 @@ other_add += df_sybils_gr15_eth['Source Address'].tolist()
 other_add += df_sybils_gr15_climate['Source Address'].tolist()
 other_unique_address = np.unique(np.array(other_add))
 
-# extract transactions to the path
+# extract loki transactions to the path
+print(f'Number of thor/loki address to process: {len(loki_unique_address)}')
 flipside_api.extract_transactions_net(PATH_TO_EXPORT, loki_unique_address, CHAIN)
 print("End mining loki transactions")
 
+diff_address = np.setdiff1d(other_unique_address, loki_unique_address)
+# extract other transactions to the path
+print(f'Number of remaining address to process: {len(diff_address)}')
 flipside_api2 = FlipsideApi(api_key, max_address=200)
-flipside_api2.extract_transactions_net(PATH_TO_EXPORT, other_unique_address, CHAIN)
+flipside_api2.extract_transactions_net(PATH_TO_EXPORT, diff_address, CHAIN)
 print("End mining all transactions")

@@ -2,4 +2,4 @@ sybil-scorer
 jupyterlab==3.6.3
 scikit-learn==>1.23.5
 openpyxl>=3.1.2
-seaborn=0.12.2
+seaborn==0.12.2
