@@ -40,9 +40,9 @@ array_unique_address = df_votes['voter'].unique()
 # Load the files that have already been extracted
 loader = LoadData.LoadData(PATH_TO_EXPORT)
 list_files = loader.get_files_in_address(CHAIN, array_unique_address)
-list_files = [str(f).replace('_tx', '') for f in list_files]
+list_files = [str(f).replace('_tx.csv', '') for f in list_files]
 
-not_in = np.setdiff1d(np.array(list_files), array_unique_address)
+not_in = np.setdiff1d(array_unique_address, np.array(list_files))
 
 if extract_all:
     print('Extracting all transactions')
