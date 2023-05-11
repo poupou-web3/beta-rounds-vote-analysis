@@ -1,5 +1,20 @@
 # Gitcoin Beta Round Sybil analysis 
 
+This repository contains two main analysis.
+
+The first one is the creation of a new stamps for the Gitcoin passport and the verification of relevance using the Thor/Loki data set of known sybils.
+
+The second is an extensive analysis to detect sybils and if possible the grants to which their contributions was made.
+
+
+## 1. New stamps creation
+The analysis is available in the notebook `analysis-on-chain-passport.ipynb`
+
+
+## 2. Sybil detection and grant analysis of the Web3 Community Round
+The analysis is available in the notebook `analysis-votes-web3-community-latest.ipynb`
+
+
 
 
 ## Installation
