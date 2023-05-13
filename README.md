@@ -6,7 +6,7 @@ The first one is the creation of new stamps for the Gitcoin passport and the ver
 
 The second is an extensive analysis to detect sybils and the grants to which they contributed.
 
-A third analysis was made during the round and it reviewed many project applications by analyzing the description of the projects. The analysis is in the repositories [grant-round-analysis]().
+A third analysis was made during the round and it reviewed many project applications by analyzing the description of the projects. The analysis is in the repositories [GGR-beta-analysis](https://github.com/poupou-web3/GGR-beta-analysis).
 
 
 ## 1. New Passport stamps creation
@@ -51,7 +51,7 @@ All the addresses and their Boolean are available in the file : [suspicious_addr
 
 ## 3. Grant Review
 The grant review analyzed all beta round project applications by analyzing the description using readability metrics and originalityAI to detect AI-generated text. Then. A list of grants not passing a threshold is reviewed manually by analyzing the website, Twitter, GitHub, and any related information. 
-The complete analysis is available in the repository : [grant-round-analysis]().
+The complete analysis is available in the repository :  [GGR-beta-analysis](https://github.com/poupou-web3/GGR-beta-analysis).
 
 ## Installation
 
@@ -66,8 +66,8 @@ Transactions data are located in the transaction_full of the notebook. The data 
 - ALL Web3 community transactions of contributors | https://market.oceanprotocol.com/asset/did:op:278accf3a5d25a6b91886da0b6dd6c436dac1871d67ec5cad0ef1e5b077986c5
 Some scripts are provided to demonstrate how to extract that data using Sybil-scorer and the list of addresses.
 
-Other data available on the [FAQ]() of the hackathon to all participants was also used.
+Other data available on the [FAQ](https://github.com/OpenDataforWeb3/Resources/blob/5104f7b09432797b2929fbf069dd08cf3f2d744d/docs/hackathon_data_faq.md) of the hackathon to all participants was also used.
 In particular :
-- The list of project application [IPFS](h) named *projects.csv in the notebook 
-- The list of votes to any project [IPFS]() named *votes.csv in the notebooks
+- The list of project application [IPFS](https://odc.oceanprotocol.com/asset/did:op:5aed4e636258b47f6ee06ce3f6f29834cbb3dfe67fd34e50e5174d5886ff234c) named *projects.csv in the notebook 
+- The list of votes to any project [IPFS](https://ipfs.io/ipfs/Qmaf4U2MJUzEcf1BZx9RBpoANoxwA2rkYugcugtfS9oHoN?filename=Qmaf4U2MJUzEcf1BZx9RBpoANoxwA2rkYugcugtfS9oHoN) named *votes.csv in the notebooks
 
