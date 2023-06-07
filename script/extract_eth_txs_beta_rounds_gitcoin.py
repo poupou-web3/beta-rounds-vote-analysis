@@ -16,6 +16,8 @@ extract_all = False
 current_dir = Path(os.getcwd())
 PATH_TO_EXPORT = os.path.join(current_dir.parent.parent, 'tx_data', FOLDER_NAME)
 DATA_DIR = os.path.join(current_dir.parent.parent, 'data-regen-rangers')
+DATA_DIR_GITCOIN = os.path.join(current_dir.parent.parent, 'data-gitcoin')
+
 
 # Initialize Flipside API
 api_key = os.environ['FLIPSIDE_API_KEY']
@@ -26,14 +28,27 @@ PATH_TO_VOTES_OLD = os.path.join(DATA_DIR, "beta_round_votes.csv")
 PATH_TO_VOTES = os.path.join(DATA_DIR, "votes_baoki.csv")
 PATH_TO_GRANTS = os.path.join(DATA_DIR, "all-allo-rounds.csv")
 
-df_votes = pd.read_csv(PATH_TO_VOTES)
-df_votes_old = pd.read_csv(PATH_TO_VOTES_OLD)
+# Load data from gitcoin
+t_votes_gitcoin = []
+for file in os.listdir(DATA_DIR_GITCOIN):
+    if file.endswith(".csv"):
+        PATH_TO_VOTES_GITCOIN = os.path.join(DATA_DIR_GITCOIN, file)
+        t_votes_gitcoin.append(pd.read_csv(PATH_TO_VOTES_GITCOIN))
+
+df_votes = pd.concat(t_votes_gitcoin)
+
+# df_votes = pd.read_csv(PATH_TO_VOTES)
+# df_votes_old = pd.read_csv(PATH_TO_VOTES_OLD)
 df_grants = pd.read_csv(PATH_TO_GRANTS)
 
 # Lowercase all addresses
 df_grants['Round ID'] = df_grants['Round ID'].str.lower()
-str_columns_votes = ['id', 'transaction', 'projectId', 'roundId', 'voter', 'grantAddress']
+# str_columns_votes = ['id', 'transaction', 'projectId', 'roundId', 'voter', 'grantAddress']
+# df_votes[str_columns_votes] = df_votes[str_columns_votes].applymap(lambda x: x.lower())
+
+str_columns_votes = ['id', 'projectId', 'roundId', 'voter', 'grantAddress']
 df_votes[str_columns_votes] = df_votes[str_columns_votes].applymap(lambda x: x.lower())
+
 
 array_unique_address = df_votes['voter'].unique()
 
