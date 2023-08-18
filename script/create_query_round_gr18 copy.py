@@ -65,11 +65,11 @@ for index, row in df_projects.iterrows():
     title = row['title'].replace("'", ' ')
     grantAddress = row['grantAddress'].replace("'", ' ')
     if index == 0:
-        query += f"SELECT '{title}' as title, '{grantAddress}' as payout_address UNION ALL\n"
+        query += f"SELECT '{title}' as title, {grantAddress} as payout_address UNION ALL\n"
     elif index != len(df_projects)-1:
-        query += f"SELECT '{title}', '{grantAddress}' UNION ALL\n"
+        query += f"SELECT '{title}', {grantAddress} UNION ALL\n"
     else:
-        query += f"SELECT '{title}', '{grantAddress}'\n"
+        query += f"SELECT '{title}', {grantAddress}\n"
 
 
 # write to text file
