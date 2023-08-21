@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 
 def safe_get(data, *keys):
     """Safely retrieve nested dictionary keys."""
@@ -33,6 +34,7 @@ def load_round_projects_data(round_id, chain_id):
         if title and grantAddress:  # Ensure required fields are available
             project_data = {
                 'projectId': project['projectId'],
+                'roundId': project['roundId'],
                 'title': title,
                 'grantAddress': grantAddress,
                 'status': project['status'],
@@ -55,15 +57,40 @@ for round_id in GR18_ROUNDS_ID:
     projects.append(load_round_projects_data(round_id, CHAIN_ID))
 
 df_projects = pd.concat(projects)
-df_projects = df_projects.loc[df_projects['status'] == 'APPROVED', : ]
-df_projects.drop_duplicates(subset=['grantAddress'], inplace=True)
-df_projects.to_csv(f'projects_GR18_ROUNDS_ID.csv', index=False)
+df_projects = df_projects.loc[np.logical_and(df_projects['status'] == 'APPROVED', df_projects['roundId'].isin(GR18_ROUNDS_ID)), : ]
+df_projects.drop_duplicates(subset=['grantAddress', 'roundId'], inplace=True)
+
+df_projects['title'] = df_projects['title'].str.replace("'", ' ')
+df_projects['grantAddress'] = df_projects['grantAddress'].str.replace("'", ' ')
+
+df_projects.to_csv('projects_GR18_ROUNDS_ID.csv', index=False)
+df_projects.to_csv('projects_small_GR18_ROUNDS_ID.csv', columns=['title', 'grantAddress', 'roundId'], index=False)
 
 df_projects.reset_index(inplace=True, drop=True)
 query = ""
 for index, row in df_projects.iterrows():
-    title = row['title'].replace("'", ' ')
-    grantAddress = row['grantAddress'].replace("'", ' ')
+    title = row['title']
+    grantAddress = row['grantAddress']
+    roundId = row['roundId']
+    if index == 0:
+        query += f"SELECT '{title}' as title, {grantAddress} as payout_address, {roundId} as round_id UNION ALL\n"
+    elif index != len(df_projects)-1:
+        query += f"SELECT '{title}', {grantAddress}, {roundId} UNION ALL\n"
+    else:
+        query += f"SELECT '{title}', {grantAddress}, {roundId}\n"
+
+
+# write to text file
+with open('query.txt', 'w', encoding='utf-8') as f:
+    f.write(query)
+
+# small union query
+query = ""
+df_projects.drop_duplicates(subset=['grantAddress'], inplace=True)
+df_projects.reset_index(inplace=True, drop=True)
+for index, row in df_projects.iterrows():
+    title = row['title']
+    grantAddress = row['grantAddress']
     if index == 0:
         query += f"SELECT '{title}' as title, {grantAddress} as payout_address UNION ALL\n"
     elif index != len(df_projects)-1:
@@ -73,7 +100,7 @@ for index, row in df_projects.iterrows():
 
 
 # write to text file
-with open('query.txt', 'w', encoding='utf-8') as f:
+with open('query_small.txt', 'w', encoding='utf-8') as f:
     f.write(query)
 
 
