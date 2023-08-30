@@ -65,6 +65,7 @@ df_projects['grantAddress'] = df_projects['grantAddress'].str.replace("'", ' ')
 
 df_projects.to_csv('projects_GR18_ROUNDS_ID.csv', index=False)
 df_projects.to_csv('projects_small_GR18_ROUNDS_ID.csv', columns=['title', 'grantAddress', 'roundId'], index=False)
+df_projects.drop_duplicates(subset=['title']).to_csv('projects_title_GR18_ROUNDS_ID.csv', columns=['title'], index=False)
 
 df_projects.reset_index(inplace=True, drop=True)
 query = ""
@@ -84,10 +85,28 @@ for index, row in df_projects.iterrows():
 with open('query.txt', 'w', encoding='utf-8') as f:
     f.write(query)
 
-# small union query
-query = ""
+
 df_projects.drop_duplicates(subset=['grantAddress'], inplace=True)
 df_projects.reset_index(inplace=True, drop=True)
+query = ""
+for index, row in df_projects.iterrows():
+    title = row['title']
+    grantAddress = row['grantAddress']
+    roundId = row['roundId']
+    if index == 0:
+        query += f"SELECT '{title}' as title, {grantAddress} as payout_address, {roundId} as round_id UNION ALL\n"
+    elif index != len(df_projects)-1:
+        query += f"SELECT '{title}', {grantAddress}, {roundId} UNION ALL\n"
+    else:
+        query += f"SELECT '{title}', {grantAddress}, {roundId}\n"
+
+
+# write to text file
+with open('query_unique_round.txt', 'w', encoding='utf-8') as f:
+    f.write(query)
+
+# small union query
+query = ""
 for index, row in df_projects.iterrows():
     title = row['title']
     grantAddress = row['grantAddress']

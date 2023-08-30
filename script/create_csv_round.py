@@ -1,8 +1,9 @@
 import requests
 import pandas as pd
 
+
 def load_round_votes_data(round_id):
-    votes_url = 'https://indexer-grants-stack.gitcoin.co/data/1/rounds/' + round_id + '/votes.json'
+    votes_url = f'https://indexer-grants-stack.gitcoin.co/data/{CHAIN_ID}/rounds/' + round_id + '/votes.json'
     try:
         # download the Votes JSON data from the URL
         response = requests.get(votes_url)
@@ -15,7 +16,7 @@ def load_round_votes_data(round_id):
 
 def load_round_projects_data(round_id):
     # prepare the URLs
-    projects_url = 'https://indexer-grants-stack.gitcoin.co/data/1/rounds/' + round_id + '/projects.json'
+    projects_url = f'https://indexer-grants-stack.gitcoin.co/data/{CHAIN_ID}/rounds/' + round_id + '/projects.json'
     
     try:
         # download the Projects JSON data from the URL
@@ -37,6 +38,7 @@ def load_round_projects_data(round_id):
                 'uniqueContributors': project['uniqueContributors']
             }
             projects.append(project_data)
+
         # Create a DataFrame from the extracted data
         dfp = pd.DataFrame(projects)
         # Reorder the columns to match the desired order and rename column id to project_id
@@ -48,7 +50,9 @@ def load_round_projects_data(round_id):
     except:
         return pd.DataFrame()
 
-ID_ROUND = '0x6e8dC2e623204D61b0E59E668702654aE336c9f7'
+CHAIN_ID = "10"
+ID_ROUND = '0x30C381033aA2830cEB0aA372C2e4D28F004b3DB9'
+
 df_votes = load_round_votes_data(ID_ROUND)
 df_projects = load_round_projects_data(ID_ROUND)
 
