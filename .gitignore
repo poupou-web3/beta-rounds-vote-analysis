@@ -1,8 +1,10 @@
 *.joblib
 venv*
+ven*
 *idea
 *.vscode
 
+safe
 data
 vexplorer
 
@@ -143,3 +145,8 @@ projects_small.csv
 s_voters.csv
 jupyter-tag/df_merge_feature_target_full.csv
 projects_GR18_ROUNDS_ID.csv
+projects_small_GR18_ROUNDS_ID.csv
+projects_title_GR18_ROUNDS_ID.csv
+query_small.txt
+query_unique_round.txt
+query.txt
