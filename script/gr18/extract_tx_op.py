@@ -6,21 +6,20 @@ import numpy as np
 from pathlib import Path
 
 
-FOLDER_NAME = 'gr18'
-CHAIN = 'optimism'
-N_DAYS = 80
-PAGE_SIZE = 50000
-TOTAL_DAYS = 657
+FOLDER_NAME = 'gr18' # the name of the folder where the data will be stored
+CHAIN = 'optimism' # the name of the chain to be queried
+N_DAYS = 80 # number of days to be queried at a time, to avoid query timeout
+PAGE_SIZE = 50000 # Flipside API page size, decrease it if the page size errors is thrown
+TOTAL_DAYS = 657 # NUmber of days since chain inception, here set for optimism
 
-# Set path to data folder
+# Set path to data folder, set these according to your folder structure
 current_dir = Path(os.getcwd())
 PATH_TO_EXPORT = os.path.join(current_dir.parent.parent.parent, 'tx_data', FOLDER_NAME)
 
-
 # Initialize Flipside API
-api_key = os.environ['FLIPSIDE_API_KEY']
-flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
+api_key = os.environ['FLIPSIDE_API_KEY'] # set your API key as an environment variable, you need to set it
 
+# SQL query to be executed
 sql_template = """
  with dai as (
   SELECT
@@ -128,11 +127,12 @@ AND CURRENT_DATE - interval '%d day'
 AND tx.STATUS = 'SUCCESS'  
 """
 
+# Initialize Flipside API using sbscorer from sybil-scorer
 flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
 
 ls_df = []
 for i in range (0, (TOTAL_DAYS//N_DAYS)+1):
-    print('Processing days %d to %d' % ((i+1)*N_DAYS, i*N_DAYS))
+    print('Processing days from today-%d days to today-%d days' % ((i+1)*N_DAYS, i*N_DAYS))
     sql = sql_template % (CHAIN, CHAIN, CHAIN, (i+1)*N_DAYS, i*N_DAYS) # between oldest date and current date
     ls_df.append(flipside_api.execute_query(sql))
 
