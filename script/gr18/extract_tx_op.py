@@ -30,7 +30,7 @@ sql_template = """
     'DAI' as token,
     amount_usd
   from
-    optimism.core.ez_token_transfers
+    %s.core.ez_token_transfers
   where
     block_timestamp between '2023-08-15 12:00:00.000'
     and '2023-08-29 12:00:00.000'
@@ -46,7 +46,7 @@ eth_time AS (
   origin_to_address,
   eth_to_address
   from
-    optimism.core.ez_eth_transfers
+    %s.core.ez_eth_transfers
   where
     block_timestamp between '2023-08-15 12:00:00.000'
     and '2023-08-29 12:00:00.000'
@@ -119,7 +119,7 @@ tx.GAS_LIMIT,
 tx.GAS_USED,
 tx.TX_FEE,
 tx.ETH_VALUE
-FROM optimism.core.fact_transactions tx
+FROM %s.core.fact_transactions tx
 INNER JOIN
 unique_voter v ON tx.FROM_ADDRESS = v.voter OR tx.TO_ADDRESS = v.voter
 WHERE tx.BLOCK_TIMESTAMP 
@@ -133,7 +133,7 @@ flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
 ls_df = []
 for i in range (0, (TOTAL_DAYS//N_DAYS)+1):
     print('Processing days %d to %d' % ((i+1)*N_DAYS, i*N_DAYS))
-    sql = sql_template % ((i+1)*N_DAYS, i*N_DAYS) # between oldest date and current date
+    sql = sql_template % (CHAIN, CHAIN, CHAIN, (i+1)*N_DAYS, i*N_DAYS) # between oldest date and current date
     ls_df.append(flipside_api.execute_query(sql))
 
 print('Concatenating dataframes')
