@@ -1,5 +1,6 @@
 import os 
 from pathlib import Path
+import time
 
 import pandas as pd
 import numpy as np
@@ -7,7 +8,7 @@ import numpy as np
 
 from sbscorer.sblegos.TransactionAnalyser import TransactionAnalyser as txa
 
-
+start_time = time.time()
 FOLDER_NAME = 'gr18'
 CHAIN = 'optimism'
 CONTRACT_CREATION_AD_NAME = '0x_contract_creation'
@@ -84,4 +85,5 @@ for round_name in round_names:
 
     df_features.to_csv(os.path.join(PATH_TO_EXPORT, f'features_{round_name}.csv'), index=False)
 
-
+print(f'Total time: {time.time() - start_time}')
+print('Done')
