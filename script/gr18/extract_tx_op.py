@@ -23,39 +23,89 @@ flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
 
 sql_template = """
  with dai as (
-SELECT
-  tx_hash,
-  block_timestamp,
-  origin_from_address as voter,
-  'DAI' as token,
-  amount_usd
-from
-  optimism.core.ez_token_transfers
-where
-  contract_address = '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1'
-and origin_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
-and block_timestamp between '2023-08-15 12:00:00.000' and '2023-08-29 12:00:00.000'
-
-), eth AS
-(
-SELECT
-  tx_hash,
-  block_timestamp,
-  origin_from_address as voter,
-  'ETH' as token,
-  amount_usd
-from
-  optimism.core.ez_eth_transfers
-where
-  origin_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
-and eth_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
-and block_timestamp between '2023-08-15 12:00:00.000' and '2023-08-29 12:00:00.000'
+  SELECT
+    tx_hash,
+    block_timestamp,
+    origin_from_address as voter,
+    'DAI' as token,
+    amount_usd
+  from
+    optimism.core.ez_token_transfers
+  where
+    block_timestamp between '2023-08-15 12:00:00.000'
+    and '2023-08-29 12:00:00.000'
+    and contract_address = '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1'
+    and origin_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
+),
+eth_time AS (
+  SELECT
+    tx_hash,
+    block_timestamp,
+    origin_from_address as voter,
+    amount_usd,
+  origin_to_address,
+  eth_to_address
+  from
+    optimism.core.ez_eth_transfers
+  where
+    block_timestamp between '2023-08-15 12:00:00.000'
+    and '2023-08-29 12:00:00.000'
+),
+eth_direct as (
+  SELECT
+    tx_hash,
+    block_timestamp,
+    voter,
+    'ETH' as token,
+    amount_usd
+  FROM
+    eth_time
+  WHERE
+    origin_to_address IN (
+      '0x8de918f0163b2021839a8d84954dd7e8e151326d',
+      '0xb6be0ecafdb66dd848b0480db40056ff94a9465d',
+      '0x2871742b184633f8dc8546c6301cbc209945033e',
+      '0x10be322de44389ded49c0b2b73d8c3a1e3b6d871',
+      '0x5b95acf46c73fd116f0fedadcbef453530e35d0',
+      '0xc5fdf5cff79e92fac1d6efa725c319248d279200',
+      '0xf591e42dffe8e62c2085ccaadfe05f84d89d0c6',
+      '0x9331fde4db7b9d9d1498c09d30149929f24cf9d5',
+      '0x30c381033aa2830ceb0aa372c2e4d28f004b3db9',
+      '0x69e423181f1d3e6bebf8ab88030c36da73785f26'
+    )
+    and eth_to_address IN (
+      '0x8de918f0163b2021839a8d84954dd7e8e151326d',
+      '0xb6be0ecafdb66dd848b0480db40056ff94a9465d',
+      '0x2871742b184633f8dc8546c6301cbc209945033e',
+      '0x10be322de44389ded49c0b2b73d8c3a1e3b6d871',
+      '0x5b95acf46c73fd116f0fedadcbef453530e35d0',
+      '0xc5fdf5cff79e92fac1d6efa725c319248d279200',
+      '0xf591e42dffe8e62c2085ccaadfe05f84d89d0c6',
+      '0x9331fde4db7b9d9d1498c09d30149929f24cf9d5',
+      '0x30c381033aa2830ceb0aa372c2e4d28f004b3db9',
+      '0x69e423181f1d3e6bebf8ab88030c36da73785f26'
+    )
+),
+eth_gtc as (
+  SELECT
+    tx_hash,
+    block_timestamp,
+    voter,
+    'ETH' as token,
+    amount_usd
+  FROM
+    eth_time
+  WHERE
+    origin_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
+    and eth_to_address = '0x15fa08599eb017f89c1712d0fe76138899fdb9db'
 ),
 
 all_votes as (
-SELECT * from eth
+SELECT * from eth_gtc
  union all 
 select * FROM dai
+union all
+select * from eth_direct
 ),
 
 unique_voter as (SELECT DISTINCT voter from all_votes)
