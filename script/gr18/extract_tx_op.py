@@ -11,7 +11,7 @@ CHAIN = 'optimism' # the name of the chain to be queried
 N_DAYS = 80 # number of days to be queried at a time, to avoid query timeout
 PAGE_SIZE = 30000 # Flipside API page size, decrease it if the page size errors is thrown
 TOTAL_DAYS = 657 # Number of days since chain inception, here set for optimism
-TYPE = 'TRANSACTIONS' # 'TRANSACTIONS' or 'TOKEN_TRANSFERS'
+TYPE = 'TOKEN_TRANSFERS' # 'TRANSACTIONS' or 'TOKEN_TRANSFERS'
 
 # Set path to data folder, set these according to your folder structure
 current_dir = Path(os.getcwd())
@@ -32,7 +32,7 @@ if TYPE == 'TRANSACTIONS':
         'DAI' as token,
         amount_usd
     from
-        %s.core.ez_token_transfers
+        optimism.core.ez_token_transfers
     where
         block_timestamp between '2023-08-15 12:00:00.000'
         and '2023-08-29 12:00:00.000'
@@ -48,7 +48,7 @@ if TYPE == 'TRANSACTIONS':
     origin_to_address,
     eth_to_address
     from
-        %s.core.ez_eth_transfers
+        optimism.core.ez_eth_transfers
     where
         block_timestamp between '2023-08-15 12:00:00.000'
         and '2023-08-29 12:00:00.000'
@@ -141,7 +141,7 @@ elif TYPE == 'TOKEN_TRANSFERS':
             'DAI' as token,
             amount_usd
         from
-            %s.core.ez_token_transfers
+            optimism.core.ez_token_transfers
         where
             block_timestamp between '2023-08-15 12:00:00.000'
             and '2023-08-29 12:00:00.000'
@@ -157,7 +157,7 @@ elif TYPE == 'TOKEN_TRANSFERS':
         origin_to_address,
         eth_to_address
         from
-            %s.core.ez_eth_transfers
+            optimism.core.ez_eth_transfers
         where
             block_timestamp between '2023-08-15 12:00:00.000'
             and '2023-08-29 12:00:00.000'
@@ -252,7 +252,7 @@ flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
 ls_df = []
 for i in range (0, (TOTAL_DAYS//N_DAYS)+1):
     print('Processing days from today-%d days to today-%d days' % ((i+1)*N_DAYS, i*N_DAYS))
-    sql = sql_template % (CHAIN, CHAIN, CHAIN, (i+1)*N_DAYS, i*N_DAYS) # between oldest date and current date
+    sql = sql_template % (CHAIN, (i+1)*N_DAYS, i*N_DAYS) # between oldest date and current date
     ls_df.append(flipside_api.execute_query(sql))
 
 print('Concatenating dataframes')
