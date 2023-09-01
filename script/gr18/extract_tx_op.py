@@ -10,7 +10,7 @@ FOLDER_NAME = 'gr18' # the name of the folder where the data will be stored
 CHAIN = 'optimism' # the name of the chain to be queried
 N_DAYS = 80 # number of days to be queried at a time, to avoid query timeout
 PAGE_SIZE = 30000 # Flipside API page size, decrease it if the page size errors is thrown
-TOTAL_DAYS = 657 # Number of days since chain inception, here set for optimism
+TOTAL_DAYS = 657 # Number of days since chain inception, here set for optimism, be mindful that setting this to a large number will result in a long query time and consume credits
 TYPE = 'TOKEN_TRANSFERS' # 'TRANSACTIONS' or 'TOKEN_TRANSFERS'
 
 # Set path to data folder, set these according to your folder structure
@@ -219,9 +219,8 @@ elif TYPE == 'TOKEN_TRANSFERS':
         select * from eth_direct
         ),
 
-        unique_voter as (SELECT DISTINCT voter from all_votes),
+        unique_voter as (SELECT DISTINCT voter from all_votes)
 
-        tx_voter as (
         SELECT 
         tx.TX_HASH, 
         tx.BLOCK_TIMESTAMP,
@@ -232,13 +231,11 @@ elif TYPE == 'TOKEN_TRANSFERS':
         tx.TO_ADDRESS,
         tx.SYMBOL,
         tx.RAW_AMOUNT,
-        -- tx.AMOUNT,
         tx.AMOUNT_USD
         FROM %s.core.ez_token_transfers tx
         INNER JOIN
         unique_voter v ON tx.ORIGIN_FROM_ADDRESS = v.voter -- sender of a token
         OR tx.TO_ADDRESS = v.voter -- receiver of a token
-        -- AND 
         WHERE tx.BLOCK_TIMESTAMP
         between CURRENT_DATE - interval '%d day'
         AND CURRENT_DATE - interval '%d day'
