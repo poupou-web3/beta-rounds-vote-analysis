@@ -34,16 +34,16 @@ passports = pd.read_csv(os.path.join(PATH_TO_GR18, passport_file_name))
 #        'ReFi DAO Local Node ', 'Token Engineering',
 #        'Ethereum Infrastructure', 'Arbitrum Domain Round']
 
-round_names =['Climate Round',
-       'Web3 Community and Education ',
-       'Global Chinese Community for Public Goods - GR18',
-        'Web3 Social',
-       'Zuzalu Continuous Innovation',
-        'Meta Pool LatAm GG18',
-       'ReFi DAO Local Node ',
-        'Token Engineering']
+# round_names =['Climate Round',
+#        'Web3 Community and Education ',
+#        'Global Chinese Community for Public Goods - GR18',
+#         'Web3 Social',
+#        'Zuzalu Continuous Innovation',
+#         'Meta Pool LatAm GG18',
+#        'ReFi DAO Local Node ',
+#         'Token Engineering']
 
-# round_names =['Web3 Open Source Software']
+round_names =['Web3 Open Source Software']
 
 # Load tx data
 df_tx = pd.read_csv(os.path.join(PATH_TO_EXPORT, tx_file_name))
