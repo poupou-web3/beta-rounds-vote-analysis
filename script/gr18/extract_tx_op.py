@@ -8,10 +8,11 @@ from pathlib import Path
 
 FOLDER_NAME = 'gr18' # the name of the folder where the data will be stored
 CHAIN = 'optimism' # the name of the chain to be queried
-N_DAYS = 80 # number of days to be queried at a time, to avoid query timeout
+N_DAYS = 51 # number of days to be queried at a time, to avoid query timeout
 PAGE_SIZE = 30000 # Flipside API page size, decrease it if the page size errors is thrown
 TOTAL_DAYS = 657 # Number of days since chain inception, here set for optimism, be mindful that setting this to a large number will result in a long query time and consume credits
 TYPE = 'TOKEN_TRANSFERS' # 'TRANSACTIONS' or 'TOKEN_TRANSFERS'
+QUERY_TIMEOUT = 10 # minutes
 
 # Set path to data folder, set these according to your folder structure
 current_dir = Path(os.getcwd())
@@ -244,7 +245,7 @@ else:
     raise ValueError('Type must be either TRANSACTIONS or TOKEN_TRANSFERS')
 
 # Initialize Flipside API using sbscorer from sybil-scorer
-flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE)
+flipside_api = FlipsideApi(api_key, page_size=PAGE_SIZE, timeout_minutes=QUERY_TIMEOUT)
 
 ls_df = []
 for i in range (0, (TOTAL_DAYS//N_DAYS)+1):
@@ -260,8 +261,17 @@ if not os.path.exists(PATH_TO_EXPORT):
     os.makedirs(PATH_TO_EXPORT)
 
 print('Exporting to csv and pkl to %s' % PATH_TO_EXPORT)
-df.to_csv(os.path.join(PATH_TO_EXPORT, f'gr_18_{CHAIN}_{TYPE}.csv'), index=False)
+try :
+    df.to_csv(os.path.join(PATH_TO_EXPORT, f'gr_18_{CHAIN}_{TYPE}.csv'), index=False, escapechar='\\')
+except Exception as e: 
+    print('Error in exporting csv')
+    print(e)
 
-df.to_pickle(os.path.join(PATH_TO_EXPORT, f'gr_18_{CHAIN}_{TYPE}.pkl'))
+try : 
+    df.to_pickle(os.path.join(PATH_TO_EXPORT, f'gr_18_{CHAIN}_{TYPE}.pkl'))
+except Exception as e:
+    print('Error in exporting pkl')
+    print(e)
+    df.to_feather(os.path.join(PATH_TO_EXPORT, f'gr_18_{CHAIN}_{TYPE}.feather'))
 
 print('Done')
