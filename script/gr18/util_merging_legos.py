@@ -52,4 +52,5 @@ for round_name in round_names:
         print(e)
 
 print(f'Total time: {time.time() - start_time}')
+print(f'Path to export: {PATH_TO_EXPORT}')
 print('Done')
