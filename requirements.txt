@@ -7,3 +7,6 @@ pyarrow>=12.0.1
 fastparquet==2023.4.0
 ipykernel
 plotly>=5.15.0
+raphtory
+seaborn
+networkx
