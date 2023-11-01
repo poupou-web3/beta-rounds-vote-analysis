@@ -150,3 +150,5 @@ projects_title_GR18_ROUNDS_ID.csv
 query_small.txt
 query_unique_round.txt
 query.txt
+jupyter-gr18/data.json
+jupyter-gr18/sybils.txt
